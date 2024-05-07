@@ -3,11 +3,10 @@ import './App.css';
 import Child1 from './child1';
 import Child2 from './child2';
 import Child3 from './child3';
-import Child4 from './child4';
 
 import * as d3 from 'd3';
 import tips from './tips.csv';
-
+import sampleData from './SampleDataset.csv';
 class App extends Component {
   constructor(props) { //creating and initializing an object created with a class
     super(props); //passed props to the base class 
@@ -20,22 +19,22 @@ class App extends Component {
 
   componentDidMount() {
     var self = this;
+    console.log("SAMPLE DATA", sampleData)
     // Read data from csv file
-    d3.csv(tips, function (d) {
+    d3.csv(sampleData, function (d) {
       //console.log(d)
     
       return {
         //filters (sets keys and values)
-        total_bill: d.total_bill,
-                smoker: d.smoker,
-    tip: d.tip,
-        sex: d.sex,
-        day: d.day
+        x: d.x,
+        y: d.y,
+        category: d.category
+    
       }
     })
       .then(function (csv_data) {
         self.setState({ data: csv_data });
-        console.log("CSVDATA",csv_data)
+        console.log("CSVDATA IN THEN",csv_data)
       })
       .catch(function (error) {
         console.log(error);
@@ -65,19 +64,12 @@ render() {
   return (
     <div className='parent'>
       <div className='row1'>
-        <div className='dropdown'>
-          Select Target (className=row1): 
-          <select value={this.state.selectedDropdownValue} onChange={this.handleDropdownChange}>
-            <option value='tip'>Tip</option>
-            <option value='total_bill'>Total Bill</option>
-            <option value='size'>Size</option>
-          </select>
-        </div>
+       
       </div>
 
       <div className='row2'>
         <div className='child1'>
-          <Child1 data1={data} selectedTarget={this.state.selectedDropdownValue}/>
+          <Child1 data1={data} />
         </div>
         <div className='child2'>
         <Child2 data2={data} updateReturnArray={this.updateReturnArray} />
@@ -88,9 +80,7 @@ render() {
         <div className='child3'>
           <Child3 data3={data} />
         </div>
-        <div className='child4'>
-          <Child4 data4={data} />
-        </div>
+     
       </div>
     </div>
   );

@@ -3,10 +3,12 @@ import * as d3 from "d3";
 import { useContext, createContext, useState } from 'react';
 export const NameContext = createContext();
 const globalArray = [];
+
+//this is the bar
 class Child2 extends Component {
   constructor(props) {
     super(props);
-    this.state = { numericalVariables: ["total_bill", "tip", "size"],
+    this.state = { //numericalVariables: ["total_bill", "tip", "size"],
     parentData : this.props.data2
   };
   }
@@ -16,7 +18,7 @@ class Child2 extends Component {
     // Calculate correlation matrix from data passed in app.js
     const { data2 } = this.props;
     var returnArray;
-    returnArray = ['total_bill', 'tip']
+  //  returnArray = ['total_bill', 'tip']
     this.props.updateReturnArray(returnArray);
   
     //const corrVal = this.corrCalculation(data2);
@@ -29,6 +31,7 @@ class Child2 extends Component {
   componentDidUpdate() {
      // Calculate correlation matrix from data passed in app.js
     const { data2 } = this.props;
+    console.log("DATA2 IN COMPONENT DID UPDATE", data2)
     var {returnArray} = this.props;
     this.Bar(data2)
 
@@ -38,7 +41,7 @@ class Child2 extends Component {
   Bar(data) {
     const tooltip = d3.select(".tooltip");
 
-    console.log("DATA RECEIVED IN BAR", data.total_bill);
+    console.log("DATA RECEIVED IN BAR", data);
 // Initialize a variable to hold the maximum value
 let maxTotalBill = 0;
 
@@ -52,6 +55,11 @@ data.forEach(obj => {
 });   
 
 console.log("MAX",maxTotalBill)
+
+
+
+
+
 var margin = { top: 10, right: 10, bottom: 30, left: 20 },
       w = 500 - margin.left - margin.right,
       h = 350 - margin.top - margin.bottom;
@@ -70,7 +78,7 @@ var x_axis = d3.scaleBand()
 // Set the range of the scale (the width of your chart)
 .range([0, w])
 // Extract the domain values (total_bill) and set them as the domain of the scale
-.domain(data.map(function(d) { return d.sex; }))
+.domain(data.map(function(d) { return d.category; }))
 // Set padding between the bands (optional)
 .padding(0.2);
 
@@ -92,6 +100,7 @@ var y = d3.scaleLinear()
     g.append("g")
       .call(d3.axisLeft(y));
   
+
  // Select all existing 'rect' elements (if any) or prepare to create new ones
 g.selectAll("rect")
 // Bind data to the selection
@@ -101,7 +110,7 @@ g.selectAll("rect")
 // Append a 'rect' element for each data point
 .append("rect")
   // Set the x-coordinate of the top-left corner of the rectangle (what you want to map x to?)
-  .attr("x", function(d) { return x_axis(d.sex); })
+  .attr("x", function(d) { return x_axis(d.category); })
   // Set the y-coordinate of the top-left corner of the rectangle
   .attr("y", function(d) { return y(parseFloat(d.total_bill)); })
   // Set the width of the rectangle
@@ -109,7 +118,7 @@ g.selectAll("rect")
   // Set the height of the rectangle
   .attr("height", function(d) { return h - y(parseFloat(d.total_bill)); })
   // Set the fill color of the rectangle
-  .attr("fill", "red")
+  .attr("fill", "orange")
   .on("mouseover", function(event, d) {
     tooltip.style("opacity", 1);
     d3.select(this).attr("stroke", "black")
@@ -135,6 +144,7 @@ g.selectAll("rect")
       <svg className="child2_svg">
       <g className="g_2"></g>
       </svg>
+      
     );
   }
 }

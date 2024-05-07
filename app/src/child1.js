@@ -1,20 +1,23 @@
 import React, { Component } from "react";
 import * as d3 from "d3";
+//this should be the scatterplolt
 class Child1 extends Component {
   constructor(props) {
     
     super(props);
     this.state = {
       x_scale: 10,
-      selectedOption: "day", // Initial selected option
-      selectedTarget: "tip", // Initial selected target
+    //  selectedOption: "day", // Initial selected option
+    //  selectedTarget: "tip", // Initial selected target
       parentData: [], // Initialize parentData as an empty array
-      sliderValue:0.5
+      selectedDropdownValue: 'A',
+      selectValue :"A"
+
+     // sliderValue:0.5
 
     };
 
-    this.onChangeValue = this.onChangeValue.bind(this)
-    this.handleSliderChange = this.handleSliderChange.bind(this);  // Bind the new handler
+    this.handleDropdownChange = this.handleDropdownChange.bind(this);
 
     //const parentData = this.props.data1
     console.log("DATA PASSED FROM PARENT TO CHILD 1:", this.props.data1)
@@ -29,21 +32,16 @@ processData(dataPassed){
  // return dataPassed
 }
 
+handleDropdownChange(event) {
+  const newDropdownValue = event.target.value;
+  console.log("NEW DROPDOWN VALUE", newDropdownValue)
+  //store dropdown value
+  this.setState({ selectValue: newDropdownValue });
+}
 
 //called when slider changes
-handleSliderChange(event) {
-  //setting the state for sliderValue
-  this.setState({ sliderValue: event.target.value });
-  // Optionally, you can trigger other actions here, e.g., affecting D3 visuals
-  console.log("New slider value:", event.target.value);
-}
 
 //called when buttons changed
-onChangeValue(event){
-  console.log(event.target.value)
-  //you need to use the this keyword to call a method from another method of the same class.
-  this.Scatter(event.target.value)
-}
 
 
 componentDidUpdate(prevProps) {
@@ -52,6 +50,7 @@ componentDidUpdate(prevProps) {
     this.setState({ parentData: this.props.data1 });
     this.Scatter(this.props.data1);
   }
+  this.Scatter(this.props.data1)
 }
 componentDidMount() {
   // Ensure tooltip container is created when component mounts
@@ -61,137 +60,155 @@ componentDidMount() {
     .append("div") // Append a child div for the tooltip itself
     .attr("class", "tooltip")
     .style("opacity", 0); // Ensure initial opacity is set to 0
-    
+    this.Scatter(this.props.data1)
+
 }
 
 
 
-Scatter(data){
-//have to use this.state to retrieve it from the state
-var sliderSelection = this.state.sliderValue
-console.log("SLIDER VALUE PASSED TO SCATTER", sliderSelection)
-  //remove remnants at start
+Scatter(data) {
+  // have to use this.state to retrieve it from the state
+  var sliderSelection = this.state.sliderValue;
+  console.log("SLIDER VALUE PASSED TO SCATTER", sliderSelection);
+  console.log("DATA PASSED TO SCATTER", data);
+  // remove remnants at start
   d3.select('.g_1').selectAll("*").remove();
 
   var margin = { top: 10, right: 10, bottom: 30, left: 20 },
-  w = 500 - margin.left - margin.right,
-  h = 350 - margin.top - margin.bottom;
-console.log("data passed in scatter",data)
-//filtering based on radio selection
-  var filteredData =  this.state.parentData.map(row => row[data])
+    w = 500 - margin.left - margin.right,
+    h = 350 - margin.top - margin.bottom;
+  console.log("data passed in scatter", data);
+  // filtering based on radio selection
+  var filteredData = this.state.parentData.map(row => row[data]);
   const tooltip = d3.select(".tooltip");
+  var x_values = [];
+  var y_values = [];
 
-  const dayData = this.state.parentData.map(d => d.day);
-  console.log("DAY DATA", dayData)
- //if (!tooltip.node()) {
-    // tooltip = d3.select(".tooltip-container")
-  //add da tooltip
- // Append the tooltip to a parent container outside of the SVG
- /*var tooltip = d3.select(".tooltip-container .tooltip")
-        .select("tooltip-container")
-         .append("div")
-         .attr("class", "tooltip")
-         .style("background-color", "white")
-         .style("border", "solid")
-         .style("border-width", "1px")
-         .style("border-radius", "5px")
-         .style("padding", "10px")
-         .style("opacity", 0);
-         */
- //}
- 
-  
-  console.log("filteredData",filteredData)
+  // finding max of x
+  for (const value of Object.values(data)) {
+    console.log("VALUEEEE", value.x);
+    x_values.push(parseInt(value.x));
+  }
 
-  //set margin
+  // finding max of y
+  for (const value of Object.values(data)) {
+    console.log("Y VALUES ", value.y);
+    y_values.push(parseInt(value.y));
+  }
+
+  console.log("THESE ARE THE X VALUES", x_values);
+  const dayData = this.state.parentData.map(d => d.x);
+  console.log("DAY DATA", dayData);
+
+  // add da tooltip
+  if (!tooltip.node()) {
+    tooltip = d3.select(".tooltip-container")
+      .append("div")
+      .attr("class", "tooltip")
+      .style("background-color", "white")
+      .style("border", "solid")
+      .style("border-width", "1px")
+      .style("border-radius", "5px")
+      .style("padding", "10px")
+      .style("opacity", 0);
+  }
+
+  console.log("filteredData", filteredData);
+
+  // set margin
   var svg = d3
-  .select(".child1_svg")
-  .attr("width", w + margin.left + margin.right)
-  .attr("height", h + margin.top + margin.bottom)
-  .select(".g_1")
-  .attr("transform", `translate(${margin.left}, ${margin.top})`);
+    .select(".child1_svg")
+    .attr("width", w + margin.left + margin.right)
+    .attr("height", h + margin.top + margin.bottom)
+    .select(".g_1")
+    .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
-
+  console.log("MAX OF X_VALUES", d3.max(x_values));
   const x_scale = d3.scaleLinear()
-  // domain is the range of the input data (x-axis data) (what is shown on the scale)
-    .domain([0, d3.max(filteredData)])
+    // domain is the range of the input data (x-axis data) (what is shown on the scale)
+    .domain([0, d3.max(x_values)])
     // range is where the axis is placed
     .range([margin.left, w]);
-  //set scale
-  //domain (x-axis --> indep) == range of possible input values that your scale will be able to handle.
-  //range (y-axis --> dep) 
+  // set scale
+  // domain (x-axis --> indep) == range of possible input values that your scale will be able to handle.
+  // range (y-axis --> dep) 
 
-var xScale = d3.scaleLinear().domain([0,100]).range([0,w])
-var yScale = d3.scaleLinear().domain([0,100]).range([h,0])
+  var xScale = d3.scaleLinear().domain([0, d3.max(x_values)]).range([0, w]);
+  var yScale = d3.scaleLinear().domain([0, d3.max(y_values)]).range([h, 0]);
 
   // Title
-  svg.append('text')
-  .attr('x', w/2)
-  .attr('y', 10)
-  .attr('text-anchor', 'middle')
-  .style('font-family', 'Helvetica')
-  .style('font-size', 20)
-  .text('Scatter Plot');
-  
+  svg.selectAll('text')
+  .join('text')
+    .attr('x', w / 2)
+    .attr('y', 10)
+    .attr('text-anchor', 'middle')
+    .style('font-family', 'Helvetica')
+    .style('font-size', 20)
+    .text('Scatter Plot');
+
   // X label
-  svg.append('text')
-  .attr('x', w/2)
-  .attr('y', 335)
-  .attr('text-anchor', 'middle')
-  .style('font-family', 'Helvetica')
-  .style('font-size', 10)
-  .text('Independant');
-  
-  
+  svg.selectAll('text')
+    .data(['X'])
+    .join('text')
+    .attr('text-anchor', 'middle')
+    .attr('transform', 'translate(60,' + h + ')rotate(-90)')
+    .attr("x", w )
+    .attr("y", -70)
+    .style('font-family', 'Helvetica')
+    .style('font-size', 12)
+    .text(function (d) { return d; });
+
   // Y label
-  svg.append('text')
-  .attr('text-anchor', 'middle')
-  .attr('transform', 'translate(60,' + h + ')rotate(-90)')
-  .attr("x",w/2)
-  .attr("y", -70)
-  .style('font-family', 'Helvetica')
-  .style('font-size', 12)
-  .text('Dependant');
+  svg.selectAll('text')
+    .data(['Y'])
+    .join('text')
+    .attr('text-anchor', 'middle')
+    .attr('transform', 'translate(60,' + h + ')rotate(-90)')
+    .attr("x", w / 1.9)
+    .attr("y", -70)
+    .style('font-family', 'Helvetica')
+    .style('font-size', 12)
+    .text(function (d) { return d; });
 
-  //add axis (append all graphical shit to g element)
   svg.append("g")
-  .attr("transform", "translate(0," + h + ")")
-  .call(d3.axisBottom(xScale));
- 
- svg.append("g")
-  .call(d3.axisLeft(yScale));
+    .attr("transform", "translate(0," + h + ")")
+    .call(d3.axisBottom(xScale));
 
-  console.log("PARENT DATA RIGHT BEFORE CIRCLES IN SCATTER", this.state.parentData)
+  svg.append("g")
+  .attr("x",30)
+    .call(d3.axisLeft(yScale));
 
-  //.data() expects an array of data objects
-  svg.append('g')
-  .selectAll("circle")
-  .data(this.state.parentData)
-  .enter()
-  .append("circle")
-  .attr("cx", function(d) {return xScale(d.total_bill);})
-  .attr("cy", function(d){return yScale(d.tip);}) // setting the vertical position (y-coordinate) of the center of the circle to be the scaled y-coordinate of the data point (d[1])
+  console.log("PARENT DATA RIGHT BEFORE CIRCLES IN SCATTER", this.state.parentData);
+  // X scale label
+  svg.append("text")
+    .attr("class", "x-scale-label")
+    .attr("x", w / 2)
+    .attr("y", h + margin.bottom)
+    .style("text-anchor", "middle")
+    .text("X ");
+  //.data() expects an array of data objects i think
+  svg.selectAll("circle")
+  .data(data)
+  .join("circle")
+  .attr("cx", function (d) { return xScale(d.x); })
+  .attr("cy", function (d) { return yScale(d.y); })
   .attr("r", 2)
-  .style("fill", "#CC0000")
-  //changes the color when hovered over the dot
-  .on("mouseover", function(event, d) {
+  .style("fill", "#00FFFF")
+  .on("mouseover", function (event, d) {
     tooltip.style("opacity", 1);
-    d3.select(this).attr("stroke", "black")
+    d3.select(this).attr("stroke", "black");
   })
-  .on("mousemove", function(event, d) {
+  .on("mousemove", function (event, d) {
     tooltip
-      .html(`Total Bill: ${d.total_bill}`)
+      .html(`X is: ${d.x}, Y is: ${d.y}`)
       .style("left", (event.pageX - 60) + "px")
       .style("top", (event.pageY + 10) + "px");
-})
-.on("mouseout", function() {
+  })
+  .on("mouseout", function () {
     tooltip.style("opacity", 0);
     d3.select(this).attr("stroke", "none");
-});
-  console.log("INSIDE", this.state.parentData)
+  });
 }
-
-//remove axis scales (in css)
 
 
 
@@ -200,14 +217,14 @@ var yScale = d3.scaleLinear().domain([0,100]).range([h,0])
       <div className="container">
         {/* this.onChangeValue is called onChange, which logs the selected value*/}
 
-        <div className="radio" onChange={this.onChangeValue}>
-
-          <label>  <input type="radio" value="tip" name="data" />  Tip
-          </label>
-          <label><input type="radio" value="total_bill" name="data" /> total_bill</label>
-          <label>  <input type="radio" value="sex" name="data" />Sex</label>
+        <div className='dropdown'>
+          
+          <select default value={this.state.selectValue} onChange={this.handleDropdownChange}>
+            <option value='A'>A</option>
+            <option value='B'>B</option>
+            <option value='C'>C</option>
+          </select>
         </div>
-      
         {/* SVG for the chart */}
         <div className="tooltip-container"></div>
         {
@@ -219,6 +236,7 @@ var yScale = d3.scaleLinear().domain([0,100]).range([h,0])
            onChange={this.handleSliderChange} />
   </div> */
 }
+
         <svg className="child1_svg" width={500} height={1}>
           <g className="g_1"></g>
         </svg>

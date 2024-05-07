@@ -37,7 +37,7 @@
   border: 1px solid rgb(212, 212, 212);
   padding: 5px;
   height: 400px;
-  width: 50%;
+  width: 70%;
 }
 .child2{
   border: 1px solid rgb(212, 212, 212);
@@ -82,7 +82,7 @@ g.legend-axis path {
 }
 .legend-axis {
   line-height: 10em;
-
+  margin-left: 10px;
   letter-spacing: 0.1em; /* Increase spacing between numbers */
 
 }

@@ -21,6 +21,8 @@ class Child3 extends Component {
       w = 500 - margin.left - margin.right,
       h = 350 - margin.top - margin.bottom;
 
+      console.log("DATA IN ")
+
   var svg = d3
     .select(".child3_svg")
     .attr("width", w + margin.left + margin.right)
