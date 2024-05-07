@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import './App.css';
 import Child1 from './child1';
 import Child2 from './child2';
-import Child3 from './child3';
 
 import * as d3 from 'd3';
 import tips from './tips.csv';
@@ -67,7 +66,7 @@ render() {
        
       </div>
 
-      <div className='row2'>
+      <div className='row1'>
         <div className='child1'>
           <Child1 data1={data} />
         </div>
@@ -76,12 +75,7 @@ render() {
         </div>
       </div>
 
-      <div className='row3'>
-        <div className='child3'>
-          <Child3 data3={data} />
-        </div>
-     
-      </div>
+   
     </div>
   );
 }
