@@ -116,8 +116,8 @@ g.selectAll("rect")
   })
   .on("mousemove", function(event, d) {
     tooltip
-      .html(`Total Bill: ${d.total_bill}<br/>Sex: ${d.sex}`)
-      .style("left", (event.pageX + 10) + "px")
+      .html(`Total Billy: ${d.total_bill}<br/>Sex: ${d.sex}`)
+      .style("left", (event.pageX - 60) + "px")
       .style("top", (event.pageY + 10) + "px");
 })
 .on("mouseout", function() {

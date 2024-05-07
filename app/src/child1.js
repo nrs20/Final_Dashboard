@@ -53,6 +53,17 @@ componentDidUpdate(prevProps) {
     this.Scatter(this.props.data1);
   }
 }
+componentDidMount() {
+  // Ensure tooltip container is created when component mounts
+  d3.select(".tooltip-container")
+    .append("div")
+    .attr("class", "tooltip-container")
+    .append("div") // Append a child div for the tooltip itself
+    .attr("class", "tooltip")
+    .style("opacity", 0); // Ensure initial opacity is set to 0
+    
+}
+
 
 
 Scatter(data){
@@ -68,6 +79,7 @@ console.log("SLIDER VALUE PASSED TO SCATTER", sliderSelection)
 console.log("data passed in scatter",data)
 //filtering based on radio selection
   var filteredData =  this.state.parentData.map(row => row[data])
+  const tooltip = d3.select(".tooltip");
 
   const dayData = this.state.parentData.map(d => d.day);
   console.log("DAY DATA", dayData)
@@ -75,8 +87,8 @@ console.log("data passed in scatter",data)
     // tooltip = d3.select(".tooltip-container")
   //add da tooltip
  // Append the tooltip to a parent container outside of the SVG
- var tooltip = d3.select(".tooltip-container .tooltip")
-
+ /*var tooltip = d3.select(".tooltip-container .tooltip")
+        .select("tooltip-container")
          .append("div")
          .attr("class", "tooltip")
          .style("background-color", "white")
@@ -85,6 +97,7 @@ console.log("data passed in scatter",data)
          .style("border-radius", "5px")
          .style("padding", "10px")
          .style("opacity", 0);
+         */
  //}
  
   
@@ -168,7 +181,7 @@ var yScale = d3.scaleLinear().domain([0,100]).range([h,0])
   .on("mousemove", function(event, d) {
     tooltip
       .html(`Total Bill: ${d.total_bill}`)
-      .style("left", (event.pageX + 10) + "px")
+      .style("left", (event.pageX - 60) + "px")
       .style("top", (event.pageY + 10) + "px");
 })
 .on("mouseout", function() {

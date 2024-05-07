@@ -65,6 +65,18 @@
   justify-content: center;
 
 }
+.tooltip{
+  position: absolute;
+  background-color: white;
+  border: 1px solid black;
+  border-radius: 5px;
+  padding: 10px;
+  opacity: 0; /* Hide the tooltip by default */
+  pointer-events: none; /* Ensure the tooltip doesn't interfere with mouse events on SVG elements */
+}
+
+
+
 g.legend-axis path {
   display: none; /* Hide axis line.. */
 }
