@@ -74,7 +74,7 @@ console.log("data passed in scatter",data)
   //add da tooltip
  // Append the tooltip to a parent container outside of the SVG
  var tooltip = d3.select(".tooltip-container .tooltip");
- if (!tooltip.node()) {
+ //if (!tooltip.node()) {
      tooltip = d3.select(".tooltip-container")
          .append("div")
          .attr("class", "tooltip")
@@ -84,7 +84,7 @@ console.log("data passed in scatter",data)
          .style("border-radius", "5px")
          .style("padding", "10px")
          .style("opacity", 0);
- }
+ //}
  
   
   console.log("filteredData",filteredData)

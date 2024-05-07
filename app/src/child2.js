@@ -109,7 +109,7 @@ g.selectAll("rect")
   // Set the height of the rectangle
   .attr("height", function(d) { return h - y(parseFloat(d.total_bill)); })
   // Set the fill color of the rectangle
-  .attr("fill", "#69b3a2")
+  .attr("fill", "red")
   .on("mouseover", function(event, d) {
     tooltip.style("opacity", 1);
     d3.select(this).attr("stroke", "black")
