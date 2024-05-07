@@ -1,0 +1,110 @@
+.parent{
+  display: flex;
+  flex-direction: column;
+  row-gap: 10px;
+}
+.row1{
+  text-align: center;
+  column-gap: 10px;
+}
+.row2{
+  display: flex;
+  column-gap: 10px;
+}
+.row3{
+  display: flex;
+  column-gap: 10px;
+  align-items: center;
+  justify-content: center;
+}
+.row4{
+  display: flex;
+  column-gap: 20px;
+}
+.dropdown{
+  display: flex;
+  flex-direction: row;
+  column-gap: 5px;
+  padding: 10px 10px;
+  justify-content: center;
+  align-items: center;
+  flex-basis: 50px;
+  background-color: rgb(223, 223, 223);
+}
+.child1{
+  display: flex;
+  justify-content: center;
+  border: 1px solid rgb(212, 212, 212);
+  padding: 5px;
+  height: 400px;
+  width: 50%;
+}
+.child2{
+  border: 1px solid rgb(212, 212, 212);
+  padding: 5px;
+  height: 400px;
+  width: 50%;
+  display: flex;
+  justify-content: center;
+}
+.child3{
+  border: 1px solid rgb(212, 212, 212);
+  padding: 20px;
+  height: 60px;
+  width: 50%;
+  display: flex;
+  justify-content: center;
+
+}
+.child4{
+  border: 1px solid rgb(212, 212, 212);
+  padding: 20px;
+  height: 350px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+
+}
+g.legend-axis path {
+  display: none; /* Hide axis line.. */
+}
+.legend-axis {
+  line-height: 10em;
+
+  letter-spacing: 0.1em; /* Increase spacing between numbers */
+
+}
+.slider{
+  padding: 10px;
+margin-left: 300px;
+
+}
+.radio-container {
+  display: flex;
+  justify-content: center; /* Center items horizontally */
+}
+
+.radio {
+  margin-right: 10px; /* Add margin between radio options */
+}
+
+.child3{
+  border: 1px solid rgb(212, 212, 212);
+  padding: 5px;
+  height: 360px; /* Height of the container */
+  width: 100%; /* Width of the container */
+  display: flex;
+  justify-content: center;
+}
+
+
+.x_axis_g path,
+.x_axis_g line {
+  display: none;
+}
+
+.y_axis_g3 path,
+.y_axis_g3 line
+{
+  display: none;
+}
