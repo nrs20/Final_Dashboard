@@ -8,7 +8,7 @@ class Child1 extends Component {
       x_scale: 10,
       selectedOption: "day", // Initial selected option
       selectedTarget: "tip", // Initial selected target
-      parentData: this.props.data1, //passed from parent (App.js)
+      parentData: [], // Initialize parentData as an empty array
       sliderValue:0.5
 
     };
@@ -46,11 +46,12 @@ onChangeValue(event){
 }
 
 
-componentDidUpdate(){
-    // Calculate correlation matrix from data passed in app.js
-   const { data1 } = this.props;
-   var {returnArray} = this.props;
-   this.Scatter(data1)
+componentDidUpdate(prevProps) {
+  // Update parentData when props change
+  if (prevProps.data1 !== this.props.data1) {
+    this.setState({ parentData: this.props.data1 });
+    this.Scatter(this.props.data1);
+  }
 }
 
 
@@ -70,12 +71,12 @@ console.log("data passed in scatter",data)
 
   const dayData = this.state.parentData.map(d => d.day);
   console.log("DAY DATA", dayData)
-
+ //if (!tooltip.node()) {
+    // tooltip = d3.select(".tooltip-container")
   //add da tooltip
  // Append the tooltip to a parent container outside of the SVG
- var tooltip = d3.select(".tooltip-container .tooltip");
- //if (!tooltip.node()) {
-     tooltip = d3.select(".tooltip-container")
+ var tooltip = d3.select(".tooltip-container .tooltip")
+
          .append("div")
          .attr("class", "tooltip")
          .style("background-color", "white")
@@ -147,6 +148,7 @@ var yScale = d3.scaleLinear().domain([0,100]).range([h,0])
  svg.append("g")
   .call(d3.axisLeft(yScale));
 
+  console.log("PARENT DATA RIGHT BEFORE CIRCLES IN SCATTER", this.state.parentData)
 
   //.data() expects an array of data objects
   svg.append('g')
