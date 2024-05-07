@@ -74,7 +74,7 @@ console.log("data passed in scatter",data)
   //add da tooltip
  // Append the tooltip to a parent container outside of the SVG
  var tooltip = d3.select(".tooltip-container .tooltip");
- //if (!tooltip.node()) {
+ if (!tooltip.node()) {
      tooltip = d3.select(".tooltip-container")
          .append("div")
          .attr("class", "tooltip")
@@ -84,7 +84,7 @@ console.log("data passed in scatter",data)
          .style("border-radius", "5px")
          .style("padding", "10px")
          .style("opacity", 0);
- //}
+ }
  
   
   console.log("filteredData",filteredData)
@@ -195,13 +195,15 @@ var yScale = d3.scaleLinear().domain([0,100]).range([h,0])
       
         {/* SVG for the chart */}
         <div className="tooltip-container"></div>
-        <div className="slider">
-          <input type="range"
-                 min="0" max="1" step="0.01"
-                 value={this.state.sliderOpacity}
-                 id="opacity"
-                 onChange={this.handleSliderChange} />
-              </div>
+        {
+  /* <div className="slider">
+    <input type="range"
+           min="0" max="1" step="0.01"
+           value={this.state.sliderOpacity}  // Also, remember to change `sliderOpacity` to `sliderValue` if that was your intention.
+           id="opacity"
+           onChange={this.handleSliderChange} />
+  </div> */
+}
         <svg className="child1_svg" width={500} height={1}>
           <g className="g_1"></g>
         </svg>
