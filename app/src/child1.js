@@ -130,7 +130,7 @@ Scatter(data) {
     // range is where the axis is placed
     .range([margin.left, w]);
   // set scale
-  // domain (x-axis --> indep) == range of possible input values that your scale will be able to handle.
+  // domain (x-axis --> indep)
   // range (y-axis --> dep) 
 
   var xScale = d3.scaleLinear().domain([0, d3.max(x_values)]).range([0, w]);

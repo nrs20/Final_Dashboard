@@ -34,108 +34,104 @@ class Child2 extends Component {
     console.log("DATA2 IN COMPONENT DID UPDATE", data2)
     var {returnArray} = this.props;
     this.Bar(data2)
-
-
+   
+  
   }
   
   Bar(data) {
     const tooltip = d3.select(".tooltip");
 
     console.log("DATA RECEIVED IN BAR", data);
-// Initialize a variable to hold the maximum value
-let maxTotalBill = 0;
+    // Initialize a variable to hold the maximum value
+    let maxTotalBill = 0;
 
-// Iterate through each object in the array
-data.forEach(obj => {
-  const totalBill = parseFloat(obj.total_bill);
-  
-  if (totalBill > maxTotalBill) {
-    maxTotalBill = totalBill;
-  }
-});   
+    var countA = 0;
+    var countB = 0;
+    var countC = 0;
+    // Iterate through each object in the array
+    data.forEach(obj => {
+      const totalBill = parseFloat(obj.total_bill);
 
-console.log("MAX",maxTotalBill)
+      if (totalBill > maxTotalBill) {
+        maxTotalBill = totalBill;
+      }
+    });
 
+    console.log("MAX", maxTotalBill);
 
+    //calculate the number of A, B, C
+    data.forEach(obj => {
+      const category = obj.category;
+      if (category === "A") {
+        countA++;
+      } else if (category === "B") {
+        countB++;
+      } else if (category === "C") {
+        countC++;
+      }
+    });
+    console.log("COUNT A", countA);
+    console.log("COUNT B", countB);
+    console.log("COUNT C", countC);
 
-
-
-var margin = { top: 10, right: 10, bottom: 30, left: 20 },
+    var margin = { top: 10, right: 10, bottom: 30, left: 20 },
       w = 500 - margin.left - margin.right,
       h = 350 - margin.top - margin.bottom;
-  
+
     var svg = d3
       .select(".child2_svg")
-      .attr("width", w + margin.left + margin.right-30)
+      .attr("width", w + margin.left + margin.right - 30)
       .attr("height", h + margin.top + margin.bottom);
-  
-    // Append a group element ('g') to the SVG to hold the bars
-    var g = svg.append("g")
-      .attr("transform", `translate(${margin.left}, ${margin.top})`);
-  
- // Define the x-axis scale using d3.scaleBand()
-var x_axis = d3.scaleBand()
-// Set the range of the scale (the width of your chart)
-.range([0, w])
-// Extract the domain values (total_bill) and set them as the domain of the scale
-.domain(data.map(function(d) { return d.category; }))
-// Set padding between the bands (optional)
-.padding(0.2);
 
-  //append da x axis graphically
+    var g = svg.append("g").attr("transform", `translate(${margin.left}, ${margin.top})`);
+
+    var x_axis = d3
+      .scaleBand()
+      .range([0, w])
+      .domain(data.map(function (d) {
+        return d.category;
+      }))
+      .padding(0.2);
+
+    //append da x axis graphically
     g.append("g")
       .attr("transform", "translate(0," + h + ")")
       .call(d3.axisBottom(x_axis))
       .selectAll("text")
-        .attr("transform", "translate(-10,0)rotate(-45)")
-        .style("text-anchor", "end");
-  
-  // Define the y-axis scale using d3.scaleLinear()
-var y = d3.scaleLinear()
-// Set the range of the scale (the height of your chart)
-.range([h, 0])
-// Extract the maximum and minimum total_bill values and set them as the domain of the scale
-.domain([0, d3.max(data, function(d) { return parseFloat(d.total_bill); })]);
-  
-    g.append("g")
-      .call(d3.axisLeft(y));
-  
+      .attr("transform", "translate(-10,0)rotate(-45)")
+      .style("text-anchor", "end");
 
- // Select all existing 'rect' elements (if any) or prepare to create new ones
-g.selectAll("rect")
-// Bind data to the selection
-.data(data)
-// For each data point that doesn't have a corresponding 'rect' element, create one
-.enter()
-// Append a 'rect' element for each data point
-.append("rect")
-  // Set the x-coordinate of the top-left corner of the rectangle (what you want to map x to?)
-  .attr("x", function(d) { return x_axis(d.category); })
-  // Set the y-coordinate of the top-left corner of the rectangle
-  .attr("y", function(d) { return y(parseFloat(d.total_bill)); })
-  // Set the width of the rectangle
-  .attr("width", x_axis.bandwidth())
-  // Set the height of the rectangle
-  .attr("height", function(d) { return h - y(parseFloat(d.total_bill)); })
-  // Set the fill color of the rectangle
-  .attr("fill", "orange")
-  .on("mouseover", function(event, d) {
-    tooltip.style("opacity", 1);
-    d3.select(this).attr("stroke", "black")
-  })
-  .on("mousemove", function(event, d) {
-    tooltip
-      .html(`Total Billy: ${d.total_bill}<br/>Sex: ${d.sex}`)
-      .style("left", (event.pageX - 60) + "px")
-      .style("top", (event.pageY + 10) + "px");
-})
-.on("mouseout", function() {
-    tooltip.style("opacity", 0);
-    d3.select(this).attr("stroke", "none");
-});
+    var y = d3
+      .scaleLinear()
+      .range([h, 0])
+      .domain([0, Math.max(countA, countB, countC)]);
 
+    g.append("g").call(d3.axisLeft(y));
 
+    //map each rectangle to count of A, B, C (for some reason my bars seem to be backwards??)
+    g.selectAll("rect")
+      .data(data)
+      .enter()
+      .append("rect")
+      .attr("x", function (d) {
+        return x_axis(d.category);
+      })
+      .attr("y", function (d) {
+        return y((d.category));
+      })
+      .style("fill", "#00FFFF")
 
+      .attr("width", x_axis.bandwidth())
+      .attr("height", function (d) {
+        if (d.category === "A") {
+          return h - y(countA);
+        } else if (d.category === "B") {
+          return h - y(countB);
+        } else if (d.category === "C") {
+          return h + y(countC);
+        }
+      })
+      
   }
   
 
